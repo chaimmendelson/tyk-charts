@@ -37,6 +37,8 @@ global:
     connectionURLSecret:
       name: "control-plane-secrets"
       keyName: "MongoURL"
+  
+  storageType: &globalStorageType mongo
 
   mdcbSynchronizer:
     enabled: true
