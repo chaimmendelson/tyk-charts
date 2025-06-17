@@ -1,0 +1,168 @@
+global:
+
+  adminUser:
+    useSecretName: "control-plane-secrets"
+
+  components:
+    bootstrap: true
+    pump: true
+    devPortal: false
+    operator: false
+
+  servicePorts:
+    dashboard: 3000
+    gateway: 8080
+
+  tls:
+    dashboard: false
+    gateway: false
+    useDefaultTykCertificate: true
+
+  secrets:
+    useSecretName: "control-plane-secrets"
+
+  imageRegistry: ""
+
+  redis:
+    addrs: tyk-dashboard-redis:26379
+    
+    passSecret:
+      name: "tyk-dashboard-redis"
+      keyName: "redis-password"
+
+    enableSentinel: true
+    
+  mongo:
+
+    connectionURLSecret:
+      name: ""
+      keyName: ""
+
+  mdcbSynchronizer:
+    enabled: true
+
+  hashKeys: true
+
+tyk-gateway:
+
+  gateway:
+
+    # kind is type of k8s object to be created for gateway.
+    kind: Deployment
+
+    # replicaCount specifies number of replicas to be created if kind is Deployment.
+    replicaCount: 1
+
+    image:
+      # image repository for Tyk Gateway
+      repository: tykio/tyk-gateway
+
+      # image tag for Tyk Gateway
+      tag: v5.3.9
+
+      # image pull policy for Tyk Gateway
+      pullPolicy: IfNotPresent
+
+    service:
+      # type of service
+      type: NodePort
+
+    control:
+      enabled: true
+      type: NodePort
+
+tyk-pump:
+  pump:
+
+    image:
+      repository: tykio/tyk-pump-docker-pub
+      tag: v1.9.0
+
+    service:
+      enabled: tru
+      type: NodePort
+      port: 9090
+
+    healthCheckService:
+      type: NodePort
+      enabled: true
+      path: "hello"
+      port: 8083
+      portName: "health"
+
+    backend:
+      - "prometheus"
+      - *globalStorageType
+
+tyk-bootstrap:
+  fullnameOverride: ""
+  nameOverride: ""
+
+  bootstrap:
+    devPortal: false
+    dashboard: true
+    portal: false
+
+    org:
+      name: Perimeter
+      cname: tyk-portal.local
+      hybrid:
+        enabled: true
+
+tyk-dashboard:
+
+  dashboard:
+    forbidAdminViewAccessToken: false
+    opa:
+      enabled: true
+      debug: true
+      api: true
+      allowAdminPasswordReset: true
+
+    # replicaCount specifies number of replicas to be created if kind is Deployment.
+    replicaCount: 1
+
+    image:
+      # image repository for Tyk Dashboard.
+      repository: tykio/tyk-dashboard
+
+      # tag for Tyk Dashboard
+      tag: v5.3.9
+
+      # image pull policy
+      pullPolicy: IfNotPresent
+
+    service:
+      type: NodePort
+      externalTrafficPolicy: Local
+      annotations: {}
+
+tyk-mdcb:
+  mdcb:
+
+  # useSecretName can be used if you don't want to store plaintext values for MDCB license and security secret in
+  # the Helm values file and would rather provide the k8s Secret externally.
+  # You should set following fields in the secret
+  # - MDCBLicense - Sets MDCB license key
+  # - securitySecret - Sets secret required for accessing secure HTTP endpoints
+    useSecretName: ""
+
+    listenPort: 9090
+
+    forwardAnalyticsToPump: true
+    trackAllPaths: true
+
+    # replicaCount specifies number of replicas to be created.
+    replicaCount: 1
+
+    image:
+      # image repository for Tyk MDCB
+      repository: tykio/tyk-mdcb-docker
+      # image tag for Tyk MDCB
+      tag: v2.5.1
+      # image pull policy
+      pullPolicy: IfNotPresent
+
+    service:
+      type: NodePort
+      port: 9090
