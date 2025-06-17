@@ -142,12 +142,7 @@ tyk-dashboard:
 tyk-mdcb:
   mdcb:
 
-  # useSecretName can be used if you don't want to store plaintext values for MDCB license and security secret in
-  # the Helm values file and would rather provide the k8s Secret externally.
-  # You should set following fields in the secret
-  # - MDCBLicense - Sets MDCB license key
-  # - securitySecret - Sets secret required for accessing secure HTTP endpoints
-    useSecretName: ""
+    useSecretName: "control-plane-secrets"
 
     listenPort: 9090
 
