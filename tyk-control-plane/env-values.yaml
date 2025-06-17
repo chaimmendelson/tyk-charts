@@ -35,8 +35,8 @@ global:
   mongo:
 
     connectionURLSecret:
-      name: ""
-      keyName: ""
+      name: "control-plane-secrets"
+      keyName: "MongoURL"
 
   mdcbSynchronizer:
     enabled: true
