@@ -31,6 +31,8 @@ global:
       keyName: "redis-password"
 
     enableSentinel: true
+    sentinelPass: "hello"
+    masterName: "mymaster"
     
   mongo:
 
