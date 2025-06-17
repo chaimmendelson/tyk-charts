@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-svc-{{ include "tyk-dashboard.fullname" . }}
+  labels:
+    app: dashboard-svc-{{ include "tyk-dashboard.fullname" . }}
+    chart: {{ include "tyk-dashboard.chart" . }}
+    release: {{ .Release.Name }}
+    tyk.tyk.io/k8s-bootstrap: tyk-dashboard
+{{- if .Values.dashboard.service.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.dashboard.service.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
+spec:
+  type: {{ .Values.dashboard.service.type }}
+  ports:
+  - port: {{ .Values.global.servicePorts.dashboard }}
+    targetPort: {{ .Values.dashboard.containerPort }}
+    protocol: TCP
+    name: {{ default "http" .Values.dashboard.service.portName | quote }}
+  selector:
+    app: dashboard-{{ include "tyk-dashboard.fullname" . }}
+    release: {{ .Release.Name }}
+{{- if eq .Values.dashboard.service.type "LoadBalancer" }}
+  externalTrafficPolicy: {{ .Values.dashboard.service.externalTrafficPolicy }}
+  loadBalancerIP: {{ .Values.dashboard.service.loadBalancerIP | quote }}
+{{- end }}

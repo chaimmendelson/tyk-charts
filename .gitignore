@@ -1,0 +1,10 @@
+tyk-oss/charts/*
+
+/.idea
+
+tyk-stack/charts/*
+
+tyk-data-plane/charts/*
+
+tyk-control-plane/charts/*
+

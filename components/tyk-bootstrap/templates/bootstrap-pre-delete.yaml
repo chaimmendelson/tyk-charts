@@ -1,0 +1,78 @@
+{{- if .Values.global.components.bootstrap -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "bootstrap-pre-delete-{{ include "tyk-bootstrap.fullname" . }}"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    tyk.tyk.io/k8s-bootstrap: tyk-k8s-bootstrap-pre-delete
+
+    # Removed the use of appVersion since it's not accurate. We'll put it back in v1.0
+    # when every app will have its own a chart
+    # app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": pre-delete
+    "helm.sh/hook-weight": "0"
+
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      annotations:
+        {{- if .Values.bootstrap.podAnnotations.preDeletePodAnnotations}}
+        {{ toYaml .Values.bootstrap.podAnnotations.preDeletePodAnnotations | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- with .Values.bootstrap.podLabels.preDeletePodLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}        
+    spec:
+      serviceAccountName: {{ default "k8s-bootstrap-role" .Values.bootstrap.serviceAccountName | quote }}
+{{- if .Values.bootstrap.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.bootstrap.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.bootstrap.tolerations }}
+      tolerations:
+{{ toYaml .Values.bootstrap.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.bootstrap.affinity }}
+      affinity:
+{{ toYaml .Values.bootstrap.affinity | indent 8 }}
+{{- end }}
+      containers:
+        - name: bootstrap-tyk-pre-delete
+          image: {{ .Values.global.imageRegistry }}{{ .Values.bootstrap.jobs.preDelete.image.repository }}:{{ .Values.bootstrap.jobs.preDelete.image.tag }}
+          command: [ '/app/bin/bootstrap-app-pre-delete' ]
+          imagePullPolicy: IfNotPresent
+          {{- if .Values.bootstrap.containerSecurityContext }}
+          securityContext:
+          {{- toYaml .Values.bootstrap.containerSecurityContext | nindent 12 }}
+          {{- end }}
+          env:
+            - name: TYK_K8SBOOTSTRAP_OPERATORKUBERNETESSECRETNAME
+              value: {{ .Values.bootstrap.operatorSecret }}
+            - name: TYK_K8SBOOTSTRAP_K8S_RELEASENAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          {{- if .Values.bootstrap.jobs.preDelete.extraEnvs }}
+          {{- include "tyk-bootstrap.tplvalues.render" ( dict "value" .Values.bootstrap.jobs.preDelete.extraEnvs "context" $ ) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.bootstrap.extraVolumeMounts }}
+          volumeMounts:
+            {{- include "tyk-bootstrap.tplvalues.render" (dict "value" .Values.bootstrap.extraVolumeMounts "context" $) | nindent 12 }}
+          {{- end }}
+      {{- if .Values.bootstrap.extraVolumes }}
+      volumes:
+        {{- include "tyk-bootstrap.tplvalues.render" (dict "value" .Values.bootstrap.extraVolumes "context" $) | nindent 8 }}
+      {{- end }}
+      terminationGracePeriodSeconds: 0
+      restartPolicy: Never
+{{- end }}
