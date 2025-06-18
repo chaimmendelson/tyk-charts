@@ -62,7 +62,7 @@ tyk-gateway:
       repository: tykio/tyk-gateway
 
       # image tag for Tyk Gateway
-      tag: v5.3.11
+      tag: v5.3.9
 
       # image pull policy for Tyk Gateway
       pullPolicy: IfNotPresent
@@ -158,7 +158,7 @@ tyk-mdcb:
       # image repository for Tyk MDCB
       repository: tykio/tyk-mdcb-docker
       # image tag for Tyk MDCB
-      tag: v2.5.1
+      tag: v2.8.0
       # image pull policy
       pullPolicy: IfNotPresent
 
