@@ -119,6 +119,10 @@ tyk-pump:
     backend:
       - "prometheus"
       - "hybrid"
+    
+    hybridPump:
+      # Send aggregated analytics data to Tyk MDCB
+      enableAggregateAnalytics: false
 
 tests:
   enabled: false
