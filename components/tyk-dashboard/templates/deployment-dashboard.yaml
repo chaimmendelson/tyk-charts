@@ -217,7 +217,7 @@ spec:
          {{ end }}
 
          - name: TYK_DB_REDISDATABASE
-            value: "{{ default "0" .Values.global.redis.storage.database }}"
+           value: "{{ default "0" .Values.global.redis.storage.database }}"
 
           {{- if .Values.global.redis.sslInsecureSkipVerify }}
           - name: TYK_DB_REDISSSLINSECURESKIPVERIFY
