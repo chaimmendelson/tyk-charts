@@ -4,7 +4,7 @@ global:
     useSecretName: "control-plane-secrets"
 
   components:
-    bootstrap: true
+    bootstrap: false
     pump: true
     devPortal: false
     operator: false
