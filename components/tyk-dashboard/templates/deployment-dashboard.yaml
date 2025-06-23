@@ -210,8 +210,8 @@ spec:
           - name: TYK_DB_REDISSENTINELPASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ include "tyk-gateway.redis_secret_name" . }}
-                key: {{ include "tyk-gateway.redis_secret_key" . }}
+                name: {{ include "tyk-dashboard.redis_secret_name" . }}
+                key: {{ include "tyk-dashboard.redis_secret_key" . }}
           - name: TYK_DB_REDISMASTERNAME
             value: "{{- .Values.global.redis.masterName -}}"
          {{ end }}
