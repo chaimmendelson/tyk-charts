@@ -1,0 +1,124 @@
+global:
+  components:
+    pump: true
+
+  servicePorts:
+    gateway: 8080
+
+  remoteControlPlane:
+    useSecretName: "tyk-gateway-secrets"
+
+    enabled: true
+    connectionString: "mdcb-svc-tyk-pro-tyk-mdcb.tyk-dashboard:9090"
+    useSSL: false
+    sslInsecureSkipVerify: true
+
+  mdcbSynchronizer:
+    enabled: true
+    keySpaceSyncInterval: 10
+
+  tls:
+    # When true, sets the gateway protocol to HTTPS.
+    gateway: false
+
+    # When true, it will install the certificate present in the templates folder, set to false when using
+    # a custom TLS certificate to avoid overwriting yours
+    useDefaultTykCertificate: true
+
+  secrets:
+    useSecretName: "tyk-gateway-secrets"
+
+  redis:
+    addrs: tyk-gateway-redis:26379
+    
+    passSecret:
+      name: "tyk-gateway-redis"
+      keyName: "redis-password"
+
+    enableSentinel: true
+    sentinelPass: "hello"
+    masterName: "mymaster"
+
+
+tyk-gateway:
+
+  gateway:
+    # The hostname to bind the Gateway to.
+    hostName: tyk-gw.local
+
+    replicaCount: 1
+
+    image:
+      # image repository for Tyk Gateway
+      repository: tykio/tyk-gateway
+
+      # image tag for Tyk Gateway
+      tag: v5.3.9
+
+      # image pull policy for Tyk Gateway
+      pullPolicy: IfNotPresent
+
+    containerPort: 8080
+
+    control:
+      # If enabled, exposes control port of the gateway
+      enabled: true
+
+      # control port of gateway
+      containerPort: 9696
+
+      # port number for control port service
+      port: 9696
+
+tyk-pump:
+
+  pump:
+    # number for replicas for pump deployment
+    replicaCount: 1
+
+    image:
+      # image repository for Tyk pump
+      repository: tykio/tyk-pump-docker-pub
+
+      # tag for Tyk pump
+      tag: v1.12.0
+
+      # image pull policy
+      pullPolicy: IfNotPresent
+
+    service:
+      # Tyk Pump svc is disabled by default. Set it to true to enable it.
+      enabled: true
+
+      # type specifies type of the service.
+      type: ClusterIP
+
+      # port specifies the port exposed by the service.
+      port: 9090
+
+    healthCheckService:
+      # type specifies type of the service.
+      type: ClusterIP
+
+      # Tyk Pump health service is disabled by default.
+      # Set it to true to enable it.
+      enabled: true
+
+      # path sets the health check path.
+      path: "hello"
+
+      # port sets the health check port.
+      # It defaults to 8083 if health check is enabled and it is not set.
+      port: 8083
+
+    containerPort: 9090
+    purgeDelay: 2
+    maxIdleConnections: 2000
+    maxActiveConnections: 4000
+
+    backend:
+      - "prometheus"
+      - "hybrid"
+
+tests:
+  enabled: false
