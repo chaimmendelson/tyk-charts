@@ -61,7 +61,7 @@ tyk-gateway:
       repository: tykio/tyk-gateway
 
       # image tag for Tyk Gateway
-      tag: v5.8.1
+      tag: v5.3.9
 
       # image pull policy for Tyk Gateway
       pullPolicy: IfNotPresent
@@ -79,7 +79,7 @@ tyk-pump:
 
     image:
       repository: tykio/tyk-pump-docker-pub
-      tag: v1.12.0
+      tag: v1.9.0
 
     service:
       enabled: true
@@ -131,7 +131,7 @@ tyk-dashboard:
       repository: tykio/tyk-dashboard
 
       # tag for Tyk Dashboard
-      tag: v5.8.1
+      tag: v5.3.9
 
       # image pull policy
       pullPolicy: IfNotPresent
@@ -158,7 +158,7 @@ tyk-mdcb:
       # image repository for Tyk MDCB
       repository: tykio/tyk-mdcb-docker
       # image tag for Tyk MDCB
-      tag: v2.8.1
+      tag: v2.5.1
       # image pull policy
       pullPolicy: IfNotPresent
 
