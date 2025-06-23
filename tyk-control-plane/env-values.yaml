@@ -117,6 +117,7 @@ tyk-dashboard:
 
   dashboard:
     forbidAdminViewAccessToken: false
+    forbidAdminResetAccessToken: false
     opa:
       enabled: true
       debug: true
