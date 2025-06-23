@@ -104,14 +104,14 @@ tyk-bootstrap:
 
   bootstrap:
     devPortal: false
-    dashboard: true
+    dashboard: false
     portal: false
 
     org:
       name: Perimeter
       cname: tyk-portal.local
       hybrid:
-        enabled: true
+        enabled: false
 
 tyk-dashboard:
 
