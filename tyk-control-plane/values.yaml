@@ -1520,6 +1520,8 @@ tyk-mdcb:
 
       # liveness includes details about liveness probe used in MDCB Deployment.
       liveness:
+        # enabled specifies whether liveness probe is enabled or not.
+        enabled: true
         # path represents the http path to be used in liveness probe in MDBC deployment.
         path: "/liveness"
         # initialDelaySeconds specifies duration in seconds used in liveness probe as initial delay.
@@ -1532,6 +1534,8 @@ tyk-mdcb:
         failureThreshold: 2
       # readiness includes details about readiness probe used in MDCB Deployment.
       readiness:
+        # enabled specifies whether readiness probe is enabled or not.
+        enabled: true
         # path represents the http path to be used in readiness probe in MDBC deployment.
         path: "/readiness"
         # initialDelaySeconds specifies the seconds used in readiness probe as initial delay.

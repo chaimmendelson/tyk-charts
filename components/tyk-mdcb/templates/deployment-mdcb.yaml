@@ -45,6 +45,7 @@ spec:
           ports:
           - containerPort: {{ .Values.mdcb.listenPort }}
           - containerPort: {{ include "mdcb.healthCheckPort" . }}
+          {{- if .Values.mdcb.probes.liveness.enabled }}
           livenessProbe:
             httpGet:
               path: {{ .Values.mdcb.probes.liveness.path }}
@@ -54,6 +55,8 @@ spec:
             periodSeconds: {{ .Values.mdcb.probes.liveness.periodSeconds }}
             timeoutSeconds: {{ .Values.mdcb.probes.liveness.timeoutSeconds }}
             failureThreshold: {{ .Values.mdcb.probes.liveness.failureThreshold }}
+          {{- end }}
+          {{- if .Values.mdcb.probes.readiness.enabled }}
           readinessProbe:
             initialDelaySeconds: {{ .Values.mdcb.probes.readiness.initialDelaySeconds }}
             periodSeconds: {{ .Values.mdcb.probes.readiness.periodSeconds }}
@@ -63,6 +66,7 @@ spec:
               path: {{ .Values.mdcb.probes.readiness.path }}
               port: {{ include "mdcb.healthCheckPort" . }}
               scheme: {{ if .Values.mdcb.httpServerOptions.useSSL }}HTTPS{{ else }}HTTP{{ end }}
+          {{- end }}
           resources:
             {{- toYaml .Values.mdcb.resources | nindent 12 }}
           volumeMounts:

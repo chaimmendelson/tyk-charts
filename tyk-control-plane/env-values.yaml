@@ -166,6 +166,8 @@ tyk-mdcb:
       type: NodePort
       port: 9090
 
-    extraEnvs:
-      - name: TYK_MDCB_LOGLEVEL
-        value: debug
+    probes:
+      liveness:
+        enabled: false
+      readiness:
+        enabled: false
