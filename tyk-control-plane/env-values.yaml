@@ -11,7 +11,7 @@ global:
 
   servicePorts:
     dashboard: 3000
-    gateway: 9696
+    gateway: 8080
 
   tls:
     dashboard: false
@@ -68,11 +68,10 @@ tyk-gateway:
 
     service:
       # type of service
-      type: NodePort
+      type: ClusterIP
 
     control:
-      enabled: true
-      type: NodePort
+      enabled: false
 
 tyk-pump:
   pump:
