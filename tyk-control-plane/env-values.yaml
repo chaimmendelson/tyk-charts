@@ -11,7 +11,7 @@ global:
 
   servicePorts:
     dashboard: 3000
-    gateway: 8080
+    gateway: 9696
 
   tls:
     dashboard: false
