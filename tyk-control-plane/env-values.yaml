@@ -72,6 +72,10 @@ tyk-gateway:
 
     control:
       enabled: false
+    
+    extraEnvs:
+      - name: TYK_GW_ENABLEHASHEDKEYSLISTING
+        value: "true"
 
 tyk-pump:
   pump:
